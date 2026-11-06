@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>密语邮简 · 本地加密二维码信件</title>
+<link rel="stylesheet" href="style.css">
+<script src="qr-bundle.js" defer></script>
+<script src="main.js" defer></script>
+</head>
+<body>
+<main class="wrap">
+<header class="head"><div class="brand">✉ 密语邮简 <small>SECRET POST</small></div><p>纸上寄二维码，暗号开启一封信。加密与解密均在你的浏览器本地完成。</p></header>
+<nav id="tabs" class="tabs"><button id="tab-write" class="active" type="button">写一封加密信</button><button id="tab-read" type="button">解开一封信</button></nav>
+<section id="write-panel" class="panel">
+<h1>写一封只有对方能读的信</h1><label for="message">信件正文</label><textarea id="message" rows="6" maxlength="4000" placeholder="输入你想寄出的秘密文字……"></textarea>
+<div class="counter" id="message-counter">0 字</div>
+<label for="password">你们事先约定的暗号</label><div class="password-row"><input id="password" type="password" autocomplete="new-password" placeholder="建议使用长且随机的暗号"><button type="button" class="secondary small" data-toggle="password">显示</button></div>
+<label for="site-url">解密页面公开地址（需先部署到 HTTPS 网站）</label><input id="site-url" type="url" inputmode="url" spellcheck="false" placeholder="https://你的用户名.github.io/secure-qr-letter/">
+<p class="hint">部署后会自动填入当前页面网址。地址不含暗号；二维码会将密文放在 URL 的 # 后面，不上传明文。</p>
+<button id="encrypt-btn" class="primary" type="button">加密并生成二维码</button>
+<div id="write-status" class="status" role="status" aria-live="polite"></div>
+<div id="result" class="result hidden"><h2>加密成功 · 可打印邮寄</h2><div class="qr-frame" id="qr-frame"></div><p id="qr-meta" class="hint"></p><div class="actions"><button id="download-png" type="button">下载二维码 PNG</button><button id="print-btn" type="button">打印信件二维码</button><button id="copy-link" type="button" class="secondary">复制链接</button></div><div class="print-note">一封密语，留待开启。<br><small>请扫描二维码并输入事先约定的暗号</small></div></div>
+</section>
+<section id="read-panel" class="panel hidden"><h1>解开一封信</h1><p class="hint">扫描纸质二维码会自动进入这里。如果你收到一段完整链接，也可以粘贴到下方。</p>
+<div id="payload-entry"><label for="cipher-input">加密链接（可选）</label><textarea id="cipher-input" rows="3" spellcheck="false" placeholder="粘贴整条加密链接，或者 #m= 后的内容"></textarea><button id="load-btn" type="button" class="secondary">载入密文</button></div>
+<div id="cipher-loaded" class="status"></div><label for="unlock-password">请输入约定的暗号</label><div class="password-row"><input id="unlock-password" type="password" autocomplete="off" placeholder="只有正确暗号才能解密"><button type="button" class="secondary small" data-toggle="unlock-password">显示</button></div>
+<button id="decrypt-btn" class="primary" type="button">解密并查看信件</button><div id="read-status" class="status" role="status" aria-live="polite"></div>
+<div id="plaintext-result" class="letter hidden"><h2>致收到这封信的你</h2><div id="plaintext" class="plain"></div><button id="clear-btn" type="button" class="secondary">清除屏幕上的明文</button></div>
+</section>
+<footer><p>🔒 AES-256-GCM · PBKDF2-SHA-256（600,000 次） · Web Crypto API</p><p>无需数据库、无需服务端加密服务。请使用 HTTPS 网址，并保管好暗号。</p></footer>
+</main>
+</body>
+</html>
